@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Naux\Mail\SendCloudTemplate;
+use Mail;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -26,4 +27,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $bind_data = ['url' => url('password/reset',$token)
+        ];
+        $template = new SendCloudTemplate('resetpassword', $bind_data);
+
+        Mail::raw($template, function ($message) {
+            $message->from('voocel@163.com', 'VOOCEL');
+
+            $message->to($this->email);
+        });
+    }
 }
