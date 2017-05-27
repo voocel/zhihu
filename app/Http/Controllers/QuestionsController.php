@@ -35,6 +35,19 @@ class QuestionsController extends Controller
      */
     public function store(Request $request)
     {
+        $message=[
+          'title.required'  =>  '标题不能为空',
+          'title.min'  =>  '标题不能少于6位',
+          'title.max'  =>  '标题不能多于30位',
+            'body.required'    =>    '内容不能为空',
+            'body.min'     =>    '内容不能少于20'
+
+        ];
+        $rules=[
+            'title' => 'required|min:6|max:30',
+            'body'  => 'required|min:20'
+        ];
+        $this->validate($request,$rules,$message);
         $data=[
             'title'=>$request->get('title'),
             'body'=>$request->get('body'),
