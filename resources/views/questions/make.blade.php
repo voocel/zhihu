@@ -21,7 +21,8 @@
                             @endif
                         </div>
                             <div class="form-group {{ $errors->has('body') ? ' has-error' : '' }}">
-                                <script id="container" name="body" type="text/plain">
+                                <label for="title">描述</label>
+                                <script style="height: 200px;" id="container" name="body" type="text/plain">
                                     {!! old('body') !!}
                                 </script>
                                 @if ($errors->has('body'))
@@ -40,7 +41,17 @@
     </div>
     <!-- 实例化编辑器 -->
     <script type="text/javascript">
-        var ue = UE.getEditor('container');
+        var ue = UE.getEditor('container',{
+            toolbars: [
+                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'fullscreen']
+            ],
+            elementPathEnabled: false,
+            enableContextMenu: false,
+            autoClearEmptyNode:true,
+            wordCount:false,
+            imagePopup:false,
+            autotypeset:{ indent: true,imageBlockLine: 'center' }
+        });
         ue.ready(function() {
             ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
         });
