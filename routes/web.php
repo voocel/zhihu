@@ -19,8 +19,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('email/verify/{token}',['as'=>'email.verify','uses'=>'EmailController@verify']);
-//   //
+//   // //
 Route::resource('questions','QuestionsController',['names'=>
     ['create'=>'question.create'],
     ['show9'=>'question.show']
 ]);
+
+//Route::get('test','HomeController@test')->middleware('throttle:10,1');
