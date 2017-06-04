@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Question;
+use App\Topic;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -40,13 +41,15 @@ class QuestionsController extends Controller
      */
     public function store(Request $request)
     {
+        $topics=$this->normalizeTopic($request->get('topics'));
+        //获取到话题对应的id数组
+        //dd($topics);
         $message=[
           'title.required'  =>  '标题不能为空',
           'title.min'  =>  '标题不能少于6位',
           'title.max'  =>  '标题不能多于30位',
             'body.required'    =>    '内容不能为空',
             'body.min'     =>    '内容不能少于20'
-
         ];
         $rules=[
             'title' => 'required|min:6|max:30',
@@ -59,6 +62,8 @@ class QuestionsController extends Controller
             'user_id'=>Auth::id()
         ];
         $question=Question::create($data);
+        //将创建的问题记录关联到question_topic表,即创建topic和question的关联数据
+        $question->topics()->attach($topics);
         return redirect()->route('questions.show',[$question->id]);
     }
 
@@ -70,7 +75,8 @@ class QuestionsController extends Controller
      */
     public function show($id)
     {
-        $question=Question::find($id);
+        //该‘topics’为Question类的方法
+        $question=Question::where('id',$id)->with('topics')->first();
         return view('questions.show',compact('question'));
     }
 
@@ -106,5 +112,20 @@ class QuestionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //如果话题存在就会返回该话题的id如果不存在就是创建新的话题，
+    //需要通过此方法获取ID，否则会是话题名称，而无法关联其他表
+    public function normalizeTopic(array $topics)
+    {
+       return collect($topics)->map(function ($topic){
+              if(is_numeric($topic)){
+                  //若话题存在，则在相应的话题的questions_count加1
+                  Topic::find($topic)->increment('questions_count');
+                  return (int) $topic;
+              }
+              $newTopic=Topic::create(['name'=>$topic,'questions_count'=>1]);
+              return $newTopic->id;
+        })->toArray();
     }
 }
