@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Question;
-use App\Topic;
+use App\Repositories\QuestionRepository;
+
 use Auth;
 use Illuminate\Http\Request;
 
 class QuestionsController extends Controller
 {
-    public function __construct()
+    protected $QuestionRepository;
+    public function __construct(QuestionRepository $questionRepository)
     {
         $this->middleware('auth')->except(['index','show']);
+        $this->QuestionRepository = $questionRepository;
     }
 
     /**
@@ -41,7 +43,7 @@ class QuestionsController extends Controller
      */
     public function store(Request $request)
     {
-        $topics=$this->normalizeTopic($request->get('topics'));
+        $topics=$this->QuestionRepository->normalizeTopic($request->get('topics'));
         //获取到话题对应的id数组
         //dd($topics);
         $message=[
@@ -61,7 +63,8 @@ class QuestionsController extends Controller
             'body'=>$request->get('body'),
             'user_id'=>Auth::id()
         ];
-        $question=Question::create($data);
+        //$question=Question::create($data);     优化使用QuestionRepository代替
+        $question = $this->QuestionRepository->create($data);
         //将创建的问题记录关联到question_topic表,即创建topic和question的关联数据
         $question->topics()->attach($topics);
         return redirect()->route('questions.show',[$question->id]);
@@ -76,7 +79,8 @@ class QuestionsController extends Controller
     public function show($id)
     {
         //该‘topics’为Question类的方法
-        $question=Question::where('id',$id)->with('topics')->first();
+       // $question=Question::where('id',$id)->with('topics')->first();     优化使用QuestionRepository
+        $question = $this->QuestionRepository->ByIdWithTopics($id);
         return view('questions.show',compact('question'));
     }
 
@@ -116,16 +120,16 @@ class QuestionsController extends Controller
 
     //如果话题存在就会返回该话题的id如果不存在就是创建新的话题，
     //需要通过此方法获取ID，否则会是话题名称，而无法关联其他表
-    public function normalizeTopic(array $topics)
-    {
-       return collect($topics)->map(function ($topic){
-              if(is_numeric($topic)){
-                  //若话题存在，则在相应的话题的questions_count加1
-                  Topic::find($topic)->increment('questions_count');
-                  return (int) $topic;
-              }
-              $newTopic=Topic::create(['name'=>$topic,'questions_count'=>1]);
-              return $newTopic->id;
-        })->toArray();
-    }
+//    public function normalizeTopic(array $topics)       (使用QuestionRepository优化代替)
+//    {
+//       return collect($topics)->map(function ($topic){
+//              if(is_numeric($topic)){
+//                  //若话题存在，则在相应的话题的questions_count加1
+//                  Topic::find($topic)->increment('questions_count');
+//                  return (int) $topic;
+//              }
+//              $newTopic=Topic::create(['name'=>$topic,'questions_count'=>1]);
+//              return $newTopic->id;
+//        })->toArray();
+//    }
 }
