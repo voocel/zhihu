@@ -28,12 +28,64 @@
             display: inline-block;
             white-space: nowrap;
             cursor: pointer;
+            float: right;
         }
 
         a.topic:hover {
             background: #259;
             color: #fff;
             text-decoration: none;
+        }
+
+
+        .button.is-naked {
+            background: 0 0;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            height: auto;
+        }
+        .actions {
+            display: flex;
+            padding: 10px 20px;
+        }
+        .delete-form {
+            margin-left: 20px;
+        }
+        .delete-button {
+            color: #3097D1;
+            text-decoration: none;
+        }
+        .question-follow {
+            text-align: center;
+        }
+
+        .user-statics , .user-actions {
+            margin-top: 20px;
+        }
+        .user-statics {
+            display: flex;
+        }
+        .statics-item {
+            padding: 2px 20px;
+        }
+        .messages-list {
+            margin-top: 80px;
+        }
+        .media.unread {
+            background:#fff9ca;
+        }
+        .notifications {
+            position: relative;
+            padding: 8px 15px 8px 25px;
+            color: #666;
+            border: none;
+            border-top: 1px dotted #eee;
+            background: transparent;
+        }
+
+        .notifications.unread {
+            background: #fff9ea;
         }
     </style>
 </head>

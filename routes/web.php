@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','QuestionsController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -22,7 +20,7 @@ Route::get('email/verify/{token}',['as'=>'email.verify','uses'=>'EmailController
 //   // // //
 Route::resource('questions','QuestionsController',['names'=>
     ['create'=>'question.create'],
-    ['show9'=>'question.show']
+    ['show'=>'question.show']
 ]);
 
 //Route::get('test','HomeController@test')->middleware('throttle:10,1');

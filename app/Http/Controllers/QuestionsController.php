@@ -22,7 +22,8 @@ class QuestionsController extends Controller
      */
     public function index()
     {
-        return 'index';
+        $questions = $this->QuestionRepository->getQuestionsFeed();
+        return view('questions.index',compact('questions'));
     }
 
     /**
@@ -122,13 +123,13 @@ class QuestionsController extends Controller
         ];
         $this->validate($request,$rules,$message);
         $topics=$this->QuestionRepository->normalizeTopic($request->get('topics'));
-        $request = $this->QuestionRepository->byId($id);
-        $request->update([
+        $question = $this->QuestionRepository->byId($id);
+        $question->update([
             'title'   => $request->get('title'),
             'body'    => $request->get('body'),
         ]);
         $question->topics()->sync($topics);
-        return redirect()->route('question.show',[$question->id]);
+        return redirect()->route('questions.show',[$question->id]);
     }
 
     /**
@@ -139,7 +140,12 @@ class QuestionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $question = $this->QuestionRepository->byId($id);
+        if(Auth::user()->owns($question)){
+            $question->delete();
+            return redirect('/');
+        }
+        abort(403,'Forbidden');  //return back()
     }
 
     //如果话题存在就会返回该话题的id如果不存在就是创建新的话题，
