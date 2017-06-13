@@ -24,7 +24,7 @@
                             <div class="form-group">
                                 <select name="topics[]" class="js-example-placeholder-multiple js-data-example-ajax form-control" multiple="multiple">
                                      @foreach($question->topics as $topic)
-                                        <option value="{{ $topic->id }}" selected="selected" >{{ $topic->name }}</option>
+                                        <option value="{{$topic->id}}" selected="selected" >{{ $topic->name }}</option>
                                      @endforeach
                                 </select>
                             </div>
