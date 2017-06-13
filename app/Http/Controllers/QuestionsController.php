@@ -92,7 +92,12 @@ class QuestionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $question = $this->QuestionRepository->byId($id);
+        //判断是不是作者本人编辑
+        if(Auth::user()->owns($question)){
+            return view('questions.edit',compact('question'));
+        }
+           return back();
     }
 
     /**
@@ -104,7 +109,26 @@ class QuestionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $message=[
+            'title.required'  =>  '标题不能为空',
+            'title.min'  =>  '标题不能少于6位',
+            'title.max'  =>  '标题不能多于30位',
+            'body.required'    =>    '内容不能为空',
+            'body.min'     =>    '内容不能少于20'
+        ];
+        $rules=[
+            'title' => 'required|min:6|max:30',
+            'body'  => 'required|min:20'
+        ];
+        $this->validate($request,$rules,$message);
+        $topics=$this->QuestionRepository->normalizeTopic($request->get('topics'));
+        $request = $this->QuestionRepository->byId($id);
+        $request->update([
+            'title'   => $request->get('title'),
+            'body'    => $request->get('body'),
+        ]);
+        $question->topics()->sync($topics);
+        return redirect()->route('question.show',[$question->id]);
     }
 
     /**

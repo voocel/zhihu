@@ -32,4 +32,9 @@ class QuestionRepository
                return $newTopic->id;
            })->toArray();
        }
+
+       public function byId($id){
+           return Question::find($id);
+       }
+
 }
