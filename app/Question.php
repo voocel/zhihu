@@ -17,6 +17,10 @@ class Question extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function answers(){
+        return $this->hasMany(Answer::class);
+    }
      //判断是不是隐藏的可不可以发布到首页
     public function scopePublished($query){
          return $query->where('is_hidden','F');

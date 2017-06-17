@@ -17,7 +17,7 @@
                             @if ($errors->has('title'))
                                 <span class="help-block">
                                         <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
+                                </span>
                             @endif
                         </div>
                             <div class="form-group">
@@ -25,7 +25,6 @@
                                 </select>
                             </div>
                             <div class="form-group {{ $errors->has('body') ? 'has-error' : '' }}">
-
                                 <label for="title">描述</label>
                                 <script style="height: 200px;" id="container" name="body" type="text/plain">
                                     {!! old('body') !!}
@@ -36,7 +35,6 @@
                                     </span>
                                 @endif
                             </div>
-
                             <button class="btn btn-success pull-right" type="submit">发布问题</button>
                         </form>
                     </div>
@@ -46,7 +44,7 @@
     </div>
       @section('js')
     <!-- 实例化编辑器 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"> </script>
     <script type="text/javascript">
         var ue = UE.getEditor('container',{
             toolbars: [

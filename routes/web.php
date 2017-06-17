@@ -22,5 +22,5 @@ Route::resource('questions','QuestionsController',['names'=>
     ['create'=>'question.create'],
     ['show'=>'question.show']
 ]);
-
+Route::post('questions/{question}/answer','AnswersController@store');
 //Route::get('test','HomeController@test')->middleware('throttle:10,1');

@@ -28,6 +28,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function answers(){
+        return $this->hasMany(Answer::class);
+    }
+
 //判断是不是作者本人
     public function owns(Model $model){
           return $this->id == $model->user_id;
