@@ -9,7 +9,7 @@
     @include('vendor.ueditor.assets')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {{ $question->title }}
@@ -17,7 +17,7 @@
                           <a class="topic" href="/topic/{{$topic->id}}">{{ $topic->name }}</a>
                          @endforeach
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body content">
                       {!! $question->body !!}
                     </div>
                     <div class="actions">
@@ -33,12 +33,46 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                      <div class="panel-heading question-follow">
+                          <h2>{{$question->followers_count}}</h2>
+                          <span>关注者</span>
+                      </div>
+                    <div class="panel-body">
+                        {{--<a href="/question/{{$question->id}}/follow" class="btn btn-default {{Auth::user()->followed($question->id) ? 'btn-success' : ''}}">--}}
+                            {{--{{Auth::user()->followed($question->id) ? '已关注' : '关注该问题'}}</a>--}}
+                        <question-follow-button></question-follow-button>
+                        <a href="#editor" class="btn btn-primary">撰写答案</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                           {{ $question->answers_count }}个答案
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" >
+
+                        @foreach($question->answers as $answer)
+                            <div class="media" >
+                                <div class="media-left">
+                                    <a href="">
+                                        <img style="width: 36px" src="{{$answer->user->avatar}}" alt="{{$answer->user->name}}">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <a href="/user/{{$answer->user->name}}">
+                                            {{$answer->user->name}}
+                                        </a>
+                                    </h4>
+                                    {!! $answer->body !!}
+                                </div>
+                            </div>
+                        @endforeach
+                        {{--如果没有登录则不显示编辑框，并提示登录--}}
+                        @if(Auth::check())
                         <form action="/questions/{{$question->id}}/answer" method="post">
                             {{ csrf_field() }}
 
@@ -55,11 +89,15 @@
 
                                     <button class="btn btn-success pull-right" type="submit">提交答案</button>
                         </form>
+                        @else
+                                <a href="{{url('login')}}" class="btn btn-success btn-block">登录提交答案</a>
+                        @endif
+
                      </div>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
                                         @section('js')
                                     <!-- 实例化编辑器 -->
                                     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>

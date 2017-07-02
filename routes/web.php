@@ -23,4 +23,6 @@ Route::resource('questions','QuestionsController',['names'=>
     ['show'=>'question.show']
 ]);
 Route::post('questions/{question}/answer','AnswersController@store');
+Route::get('question/{question}/follow','QuestionFollowController@follow');
+
 //Route::get('test','HomeController@test')->middleware('throttle:10,1');

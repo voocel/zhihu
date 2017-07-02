@@ -81,7 +81,7 @@ class QuestionsController extends Controller
     {
         //该‘topics’为Question类的方法
        // $question=Question::where('id',$id)->with('topics')->first();     优化使用QuestionRepository
-        $question = $this->QuestionRepository->ByIdWithTopics($id);
+        $question = $this->QuestionRepository->ByIdWithTopicsAndAnswers($id);
         return view('questions.show',compact('question'));
     }
 

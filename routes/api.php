@@ -22,3 +22,7 @@ Route::middleware('api')->get('topics', function (Request $request) {
             ->get();
     return $topics;
 });
+
+Route::post('/question/follower',function(Request $request){
+       return response()->json(['followed'=>false]);
+})->middleware('api');
