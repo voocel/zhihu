@@ -12,6 +12,11 @@
                 console.log(response.data);
             })
         },
+        data(){
+            return {
+                followed:false
+            }
+        },
         computed:{
             text(){
                 return this.followed ? '已关注':'关注该问题'
